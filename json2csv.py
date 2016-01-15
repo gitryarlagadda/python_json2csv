@@ -22,21 +22,20 @@ def flatten(structure, key="", path="", flattened=None):
             flatten(value, new_key, "_".join(filter(None, [path, key])), flattened)
     return flattened
 
-# ifilename = sys.argv[1]
-ifilename = 'test.json'
+ifilename = sys.argv[1]
 try:
     ofilename = sys.argv[2]
 except:
     ofilename = ifilename + ".csv"
 
 # LOAD DATA
-json_lines = [json.loads(l.strip()) for l in file(ifilename).readlines()]
+json_lines = [json.load(l.strip()) for l in file(ifilename).readlines()]
 
 csv_lines = []
 for l in json_lines:
     try:
         flattened = flatten(l)
-        if "business" in ifilename and len(flattened) < 10: continue
+        # if "business" in ifilename and len(flattened) < 10: continue
     except:
         pass
     csv_lines.append(flattened)
