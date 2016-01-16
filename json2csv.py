@@ -1,4 +1,4 @@
-# for ujson you need Microsoft Visual C++ Compiler for Python 2.7 to be installed:
+# for ujson (to work on Windows) you need Microsoft Visual C++ Compiler for Python 2.7 to be installed:
 # http://www.microsoft.com/en-us/download/details.aspx?id=44266
 
 # more about ujson: https://pypi.python.org/pypi/ujson
@@ -11,7 +11,7 @@ import csv
 def flatten(structure, key="", path="", flattened=None):
     if flattened is None:
         flattened = {}
-    if type(structure) not in(dict, list):
+    if type(structure) not in (dict, list):
         flattened[((path + "_") if path else "") + key] = structure
         # " ".join(str(structure).strip().split())
     elif isinstance(structure, list):
@@ -22,6 +22,23 @@ def flatten(structure, key="", path="", flattened=None):
             flatten(value, new_key, "_".join(filter(None, [path, key])), flattened)
     return flattened
 
+# script works with specific JSONs.
+# the goal is to transform the input JSON file in a way, where it won't start with a '{', '}' or other specific
+# character not recognized with json.loads
+
+# def joinfile(filename):
+#     sarray = []
+#     with open(filename) as fd:
+#         for line in fd:
+#             if line.startswith('{'):
+#                 continue
+#             sarray.append(line.rstrip('\n'))
+#     return ''.join(sarray)
+#
+#
+# aa = joinfile('test2.json')
+# print(aa)
+
 ifilename = sys.argv[1]
 try:
     ofilename = sys.argv[2]
@@ -29,7 +46,7 @@ except:
     ofilename = ifilename + ".csv"
 
 # LOAD DATA
-json_lines = [json.load(l.strip()) for l in file(ifilename).readlines()]
+json_lines = [json.loads(l.strip()) for l in file(ifilename).readlines()]
 
 csv_lines = []
 for l in json_lines:
@@ -39,7 +56,6 @@ for l in json_lines:
     except:
         pass
     csv_lines.append(flattened)
-
 
 fieldnames = csv_lines[0].keys()
 writer = csv.DictWriter(file(ofilename, "w"), fieldnames=fieldnames, delimiter="|")
