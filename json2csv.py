@@ -25,6 +25,7 @@ def flatten(structure, key="", path="", flattened=None):
 # script works with specific JSONs.
 # the goal is to transform the input JSON file in a way, where it won't start with a '{', '}' or other specific
 # character not recognized with json.loads
+# hint how to proceed:
 
 # def joinfile(filename):
 #     sarray = []
